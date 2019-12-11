@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dynamic Lights - A-Frame</title>
+    <meta name="description" content="Dynamic Lights - A-Frame">
+    <script src="aframe-master.js"></script>
+    <script src="https://unpkg.com/aframe-randomizer-components@3.0.2/dist/aframe-randomizer-components.min.js"></script>
+    <script src="https://unpkg.com/aframe-entity-generator-component@3.0.1/dist/aframe-entity-generator-component.min.js"></script>
+    <script>
+      AFRAME.registerComponent('random-material', {
+        init: function () {
+          this.el.setAttribute('material', {
+              color: this.getRandomColor(),
+              metalness: Math.random(),
+              roughness: Math.random()
+          });
+        },
+          
+          
+          
+          
+          
+          getRandomColor: function () {
+              
+              var letters = '0123456789ABCDEF'.split('');
+              var color = '#';
+              for (var i = 0; i < 6; i++) {
+                  color += letters[Math.floor(Math.random() * 16)];
+              }
+              return color;
+          }
+          
+      });
+        
+
+      AFRAME.registerComponent('random-torus-knot', {
+        init: function () {
+          this.el.setAttribute('geometry', {
+            primitive: 'torusKnot',
+            radius: Math.random() * 10,
+            radiusTubular: Math.random() * .75,
+            p: Math.round(Math.random() * 10),
+            q: Math.round(Math.random() * 10)
+          });
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <audio autoplay><source src="queen.mp3" type="audio/mp3"></audio>
+    <a-scene background="color: #111">
+      <a-assets>
+       <!-- add light to the scene-->
+        <a-mixin id="light"
+                 geometry="primitive: sphere; radius: 1.5"
+                 material="color: #FFF; shader: flat"
+                 light="color: #DDDDFF; distance: 120; intensity: 2; type: point"></a-mixin>
+          
+        <!-- add shapes to the scene -->       
+        <a-mixin id="torusKnot"
+                 random-torus-knot
+                 random-material
+                 random-position="min: 50 50 60; max: 100 100 120"></a-mixin>
+      </a-assets>
+
+      <!-- Use entity-generator component to generate 120 entities with the torusKnot mixin.
+      Add shapes -->
+      <a-entity animation="property: position; to: -80 -85 -100; delay: 6000; dur: 1480; easing: linear; loop: true"
+                animation__2="property: position; to: -80 -85 -100; delay: 18000; dur: 1480; easing: linear; loop: false"
+                animation__3="property: rotation; to: 0 360 0; delay: 30000; dur: 1480; easing: linear; loop: true"
+                animation__4="property: position; to: -80 -85 -100; delay: 40000; dur: 1480; easing: linear; loop: false"
+                animation__5="property: rotation; to: 0 0 0; delay: 40000; dur: 1480; easing: linear; loop: false"
+                animation__6="property: rotation; to: 0 360 0; delay: 53000; dur: 1480; easing: linear; loop: true"
+                animation__7="property: position; to: -80 -85 -100; delay: 63000; dur: 1480; easing: linear; loop: false"
+                animation__8="property: rotation; to: 0 0 0; delay: 63000; dur: 1480; easing: linear; loop: false">
+          <a-entity entity-generator="mixin: torusKnot; num: 20;  "></a-entity>
+      </a-entity>
+    
+      
+      
+      <!-- light rotate to left -->
+      <a-entity animation="property: rotation; to: 0 0 360; delay:18000; dur: 1480; easing: linear; loop: true"
+                animation__2="property: rotation; to: 0 0 0; delay:30000; dur: 1480; easing: linear; loop: false"
+                animation__3="property: rotation; to: 0 0 360; delay:40000; dur: 1480; easing: linear; loop: true">
+        <a-entity mixin="light" position="30 0 0"></a-entity>
+      </a-entity>
+      
+      <!-- light rotate to forward/bacward -->
+      <a-entity animation="property: rotation; to: 30 60 0; delay:18000; dur: 1480; easing: linear; loop: true"
+                animation__2="property: rotation; to: 0 0 0; delay:30000; dur: 1480; easing: linear; loop: false"
+                animation__3="property: rotation; to: 30 60 0; delay:40000; dur: 1480; easing: linear; loop: true">
+        <a-entity mixin="light" position="0 0 40" ></a-entity>
+      </a-entity>
+    </a-scene>
+    
+  </body>
+</html>
